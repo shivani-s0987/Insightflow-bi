@@ -1,4 +1,5 @@
 import csv, io, math
+from decimal import Decimal
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -30,7 +31,11 @@ def read_dataset(dataset, sheet_name=None):
 
 def json_safe(value):
     if value is None or pd.isna(value): return None
-    if isinstance(value,(np.integer,)): return int(value)
+    if isinstance(value,(bool,np.bool_)): return bool(value)
+    if isinstance(value,(int,np.integer)): return int(value)
+    if isinstance(value,Decimal):
+        if not value.is_finite(): return None
+        return int(value) if value == value.to_integral_value() else float(value)
     if isinstance(value,(np.floating,float)): return float(value) if math.isfinite(float(value)) else None
     if isinstance(value,(np.bool_,)): return bool(value)
     if hasattr(value,'isoformat'): return value.isoformat()

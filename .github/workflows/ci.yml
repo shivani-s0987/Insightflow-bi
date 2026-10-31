@@ -37,6 +37,9 @@ jobs:
       - name: Check database migrations
         run: python manage.py makemigrations --check --dry-run
 
+      - name: Prepare static files directory
+        run: mkdir -p staticfiles
+
       - name: Run backend tests
         run: python manage.py test
 
